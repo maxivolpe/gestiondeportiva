@@ -24,8 +24,8 @@ app.use(helmet({
 
 const allowedOrigins = (process.env.ALLOWED_ORIGINS || '').split(',').filter(Boolean);
 app.use(cors({
-  origin: process.env.NODE_ENV === 'development'
-    ? true  // allow all origins in dev (file://, localhost:*, etc.)
+  origin: process.env.NODE_ENV === 'development' || allowedOrigins.length === 0
+    ? true  // allow all: dev mode OR no allowlist configured (single-server SaaS)
     : (origin, callback) => {
         if (!origin || allowedOrigins.includes(origin)) return callback(null, true);
         callback(new Error('Not allowed by CORS'));
