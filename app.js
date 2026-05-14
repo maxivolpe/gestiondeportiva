@@ -9,7 +9,18 @@ const errorHandler = require('./src/middleware/errorHandler');
 
 const app = express();
 
-app.use(helmet());
+app.use(helmet({
+  contentSecurityPolicy: {
+    directives: {
+      defaultSrc: ["'self'"],
+      scriptSrc: ["'self'", "'unsafe-inline'", "'unsafe-eval'", "unpkg.com", "cdn.tailwindcss.com", "cdn.jsdelivr.net"],
+      styleSrc: ["'self'", "'unsafe-inline'", "unpkg.com", "cdn.tailwindcss.com", "fonts.googleapis.com"],
+      fontSrc: ["'self'", "fonts.gstatic.com", "data:"],
+      imgSrc: ["'self'", "data:", "blob:"],
+      connectSrc: ["'self'"],
+    },
+  },
+}));
 
 const allowedOrigins = (process.env.ALLOWED_ORIGINS || '').split(',').filter(Boolean);
 app.use(cors({
